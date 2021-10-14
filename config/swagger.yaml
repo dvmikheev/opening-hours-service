@@ -1,0 +1,107 @@
+swagger: "2.0"
+info:
+  title: "Opening Hours Service"
+  description: "This is the service that accepts JSON-formatted opening hours of a restaurant as an input and returns the rendered human readable format as a text output."
+  version: "0.0.1"
+  termsOfService: "http://swagger.io/terms/"
+basePath: "/restaurants"
+host: localhost.restaurant
+schemes:
+  - "http"
+paths:
+  /opening-hours:
+    get:
+      summary: Renders opening hours to human readable format
+      description: Receives a JSON and returns text
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/openingHours"
+        "400":
+          $ref: '#/responses/BadRequest'
+        "500":
+          $ref: '#/responses/InternalServerError'
+        "404":
+          $ref: '#/responses/NotFound'
+
+responses:
+  BadRequest:
+    description: Bad Request
+    schema:
+      $ref: "#/definitions/error"
+
+definitions:
+  error:
+    type: object
+    title: error
+    required:
+      - code
+      - message
+    description: Error message
+    properties:
+      code:
+        type: string
+        description: Service-specific error code
+      message:
+        type: string
+        description: A descriptive error message
+  openingHours:
+    type: object
+    properties:
+      monday:
+        type: array
+        items:
+          $ref: '#/definitions/time'
+      tuesday:
+        type: array
+        items:
+          $ref: '#/definitions/time'
+      wednesday:
+        type: array
+        items:
+          $ref: '#/definitions/time'
+      thursday:
+        type: array
+        items:
+          $ref: '#/definitions/time'
+      friday:
+        type: array
+        items:
+          $ref: '#/definitions/time'
+      saturday:
+        type: array
+        items:
+          $ref: '#/definitions/time'
+      sunday:
+        type: array
+        items:
+          $ref: '#/definitions/time'
+    required:
+      - monday
+      - tuesday
+      - wednesday
+      - thursday
+      - friday
+      - saturday
+      - sunday
+
+  time:
+    type: object
+    properties:
+      type:
+        type: string
+        enum: [ open, close ]
+        x-enum-varnames: [OPEN, CLOSE]
+      value:
+        type: integer
+        minimum: 0
+        maximum: 86399
+    required:
+      - type
+      - value
+
+
+
